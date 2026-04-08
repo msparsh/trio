@@ -12,7 +12,7 @@ class State(TypedDict):
     messages: Annotated[list, operator.add]
 
 
-def gucci(state: State):
+def agent(state: State):
     prompt = state['messages'][-1]
     system = SystemMessage(content="You are a helpful assistant.")
 
@@ -22,7 +22,7 @@ def gucci(state: State):
 
 workflow = StateGraph(State)
 
-workflow.add_node("agent", gucci)
+workflow.add_node("agent", agent)
 workflow.add_edge(START, "agent")
 workflow.add_edge("agent", END)
 
