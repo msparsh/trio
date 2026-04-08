@@ -13,7 +13,10 @@ class State(TypedDict):
 
 
 def gucci(state: State):
-    response = llm.invoke(state["messages"])
+    prompt = state['messages'][-1]
+    system = SystemMessage(content="You are a helpful assistant.")
+
+    response = llm.invoke([system, prompt])
     return {"messages": [response]}
 
 
@@ -26,10 +29,9 @@ workflow.add_edge("agent", END)
 app = workflow.compile()
 
 initial_state = {
-    "messages": [SystemMessage(content="You are a helpful coding assistant."),
-                 HumanMessage(content="hello whats up")]
+    "messages": [HumanMessage(content="Describe a tiger then explain the sun.")]
 }
 
 final = app.invoke(initial_state)
 for msg in final["messages"]:
-    print(type(msg).__name__, ":", msg.content)
+    print("✅", type(msg).__name__, ":", msg.content)
